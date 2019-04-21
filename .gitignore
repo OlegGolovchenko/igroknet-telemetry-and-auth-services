@@ -260,3 +260,5 @@ paket-files/
 __pycache__/
 *.pyc
 /org.igrok-net.telemetry/localdb.json
+/org.igrok-net.telemetry/admin.json
+/org.igrok-net.telemetry/admin.code

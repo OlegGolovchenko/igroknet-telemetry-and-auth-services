@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using org.igrok_net.infrastructure.domain;
-using org.igrok_net.infrastructure.domain.Interfaces;
 using org.igrok_net.infrastructure.domain.Services;
 using org.igrok_net.telemetry.Models;
 
@@ -38,6 +32,7 @@ namespace org.igrok_net.telemetry.Controllers
             {
                 var licenceId = _serviceProvider.GetLicenceService().GenerateLicence();
                 _serviceProvider.GetUserService().AssignLicence(user.Id,licenceId);
+                _serviceProvider.GetLicenceService().SetUsed(licenceId);
                 user = _serviceProvider.GetUserService().GetUser(email);
             }
             licence = _serviceProvider.GetLicenceService().GetLicenceKey(user.LicenceKeyId.Value);
