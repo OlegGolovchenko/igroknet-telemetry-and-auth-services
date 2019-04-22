@@ -53,6 +53,16 @@ namespace org.igrok_net.telemetry.Controllers
                 IsUsed = licence.IsUsed,
                 Key = licence.Key
             };
+            TelemetryRecord telemetry = _serviceProvider.GetTelemetryService().GetTelemetryRecordFor(user.Id);
+            if (telemetry != null)
+            {
+                result.Telemetry = new TelemetryModel
+                {
+                    Email = user.Mail,
+                    NetFxVersion = telemetry.NetFxVersion,
+                    OsVersion = telemetry.OsVersion
+                };
+            }
             return Ok(result);
         }
 
@@ -80,6 +90,16 @@ namespace org.igrok_net.telemetry.Controllers
                     Id = licence.Id,
                     IsUsed = licence.IsUsed,
                     Key = licence.Key
+                };
+            }
+            TelemetryRecord telemetry = _serviceProvider.GetTelemetryService().GetTelemetryRecordFor(user.Id);
+            if (telemetry != null)
+            {
+                result.Telemetry = new TelemetryModel
+                {
+                    Email = user.Mail,
+                    NetFxVersion = telemetry.NetFxVersion,
+                    OsVersion = telemetry.OsVersion
                 };
             }
             return Ok(result);

@@ -1,0 +1,60 @@
+﻿body {
+    width: 100%;
+    height: 100%;
+    background-color: lightcyan;
+}
+
+.block {
+    display: block;
+    right: 25%;
+    left: 25%;
+    width: 50%;
+    min-height: 50px;
+    margin: auto;
+    background-color: cornflowerblue;
+    padding: 5px;
+}
+
+    .block label {
+        display: block;
+        float: left;
+        width: 25%;
+        min-width: 25%;
+        min-height: 25px;
+        color: white;
+        margin: 0;
+    }
+
+    .block span {
+        display: block;
+        float: left;
+        width: 49.5%;
+        min-width: 49.5%;
+        min-height: 25px;
+        background-color: azure;
+        color: blueviolet;
+        text-align: center;
+    }
+
+    .block input {
+        display: block;
+        float: left;
+        width: 49%;
+        min-height: 23px;
+        background-color: azure;
+        margin: 0;
+        color: blueviolet;
+        text-align: center;
+    }
+
+    .block button {
+        float: left;
+        color: blueviolet;
+        background-color: azure;
+        height: 25px;
+    }
+
+        .block button:hover {
+            background-color: deepskyblue;
+            border-color: blueviolet;
+        }

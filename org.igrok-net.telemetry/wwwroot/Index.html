@@ -4,25 +4,37 @@
     <meta charset="utf-8" />
     <title>Igrok-Net</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <link href="css/main.css" rel="stylesheet" />
 </head>
 <body>
-    <div>
+    <div class="block">
         <label id="lblAdminKey"></label>
         <input type="text" id="txtAdminKey" />
     </div>
-    <div>
+    <div class="block">
         <label id="lblLogin"></label>
         <input type="email" id="txtLogin" />
-        <button id="btnAdd">+</button>
-        <button id="btnSubmit">></button>
-        <button id="btnDeactivate">Deactivate</button>
-        <button id="btnActivate">Activate</button>
+        <button id="btnAdd" title="Create">+</button>
+        <button id="btnSubmit" title="Load">></button>
+        <button id="btnDeactivate" title="Deactivate">✗</button>
+        <button id="btnActivate" title="Activate">✓</button>
     </div>
-    <div>
+    <div class="block">
         <label id="lblKey"></label>
         <span id="txtKey"></span>
     </div>
-    <span id="spnError"></span>
+    <div class="block">
+        <label id="lblOS"></label>
+        <span id="txtOS"></span>
+    </div>
+    <div class="block">
+        <label id="lblNetFx"></label>
+        <span id="txtNetFx"></span>
+    </div>
+    <div class="block">
+        <label id="lblError"></label>
+        <span id="spnError"></span>
+    </div>
     <script src="script/Index.js"></script>
 </body>
 </html>

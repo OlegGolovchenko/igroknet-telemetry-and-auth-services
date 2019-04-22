@@ -2,6 +2,9 @@
     $("#lblAdminKey").text("Admin key: ");
     $("#lblLogin").text("Login :");
     $("#lblKey").text("Your key :");
+    $("#lblOS").text("OS version :");
+    $("#lblNetFx").text(".Net Framework version :");
+    $("#lblError").text("Error message :");
     $("#btnAdd").click(function loadData() {
         var link = "/api/adm/create?email=";
         link += $("#txtLogin").val();
@@ -9,6 +12,9 @@
         link += $("#txtAdminKey").val();
         $.get(link, function (data) {
             $("#txtKey").text(data.licence.key);
+            $("#txtOS").text(data.telemetry.osVersion);
+            $("#txtNetFx").text(data.telemetry.netFxVersion);
+            $("#spnError").text("");
         }).fail(function (data) {
             $("#spnError").text(data.responseText);
         });
@@ -20,6 +26,9 @@
         link += $("#txtAdminKey").val();
         $.get(link, function (data) {
             $("#txtKey").text(data.licence.key);
+            $("#txtOS").text(data.telemetry.osVersion);
+            $("#txtNetFx").text(data.telemetry.netFxVersion);
+            $("#spnError").text("");
         }).fail(function (data) {
             $("#spnError").text(data.responseText);
         });
@@ -36,6 +45,9 @@
             link += $("#txtAdminKey").val();
             $.get(link, function (data) {
                 $("#txtKey").text(data.licence.key);
+                $("#txtOS").text(data.telemetry.osVersion);
+                $("#txtNetFx").text(data.telemetry.netFxVersion);
+                $("#spnError").text("");
             }).fail(function (data) {
                 $("#spnError").text(data.responseText);
             });
@@ -55,6 +67,9 @@
             link += $("#txtAdminKey").val();
             $.get(link, function (data) {
                 $("#txtKey").text(data.licence.key);
+                $("#txtOS").text(data.telemetry.osVersion);
+                $("#txtNetFx").text(data.telemetry.netFxVersion);
+                $("#spnError").text("");
             }).fail(function (data) {
                 $("#spnError").text(data.responseText);
             });

@@ -5,5 +5,6 @@
         public long Id { get; set; }
         public string Mail { get; set; }
         public LicenceModel Licence { get; set; }
+        public TelemetryModel Telemetry { get; set; }
     }
 }

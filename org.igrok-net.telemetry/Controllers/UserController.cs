@@ -42,7 +42,34 @@ namespace org.igrok_net.telemetry.Controllers
                 IsUsed = licence.IsUsed,
                 Key = licence.Key
             };
+            TelemetryRecord telemetry = _serviceProvider.GetTelemetryService().GetTelemetryRecordFor(user.Id);
+            if(telemetry != null)
+            {
+                result.Telemetry = new TelemetryModel
+                {
+                    Email = user.Mail,
+                    NetFxVersion = telemetry.NetFxVersion,
+                    OsVersion = telemetry.OsVersion
+                };
+            }
             return Ok(result);
+        }
+
+        [HttpPost("sendtdata")]
+        [Consumes("application/json")]
+        public IActionResult CreateTelemetry([FromBody]TelemetryModel telemetry)
+        {
+            if(telemetry == null)
+            {
+                return BadRequest("Telemetry record is empty");
+            }
+            var user = _serviceProvider.GetUserService().GetUser(telemetry.Email);
+            if(user == null || !user.LicenceKeyId.HasValue)
+            {
+                return NotFound("User not found or inactive");
+            }
+            var telemetryRecord = _serviceProvider.GetTelemetryService().CreateOrUpdateTelemetryRecord(user.Id, telemetry.OsVersion, telemetry.NetFxVersion);
+            return Ok();
         }
     }
 }
