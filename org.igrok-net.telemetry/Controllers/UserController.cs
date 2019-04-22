@@ -30,18 +30,24 @@ namespace org.igrok_net.telemetry.Controllers
             LicenceKey licence;
             if (!user.LicenceKeyId.HasValue)
             {
-                var licenceId = _serviceProvider.GetLicenceService().GenerateLicence();
-                _serviceProvider.GetUserService().AssignLicence(user.Id,licenceId);
-                _serviceProvider.GetLicenceService().SetUsed(licenceId);
-                user = _serviceProvider.GetUserService().GetUser(email);
+                if (_serviceProvider.GetLicenceService().GetFirstUnusedLicenceKey() == null)
+                {
+                    var licenceId = _serviceProvider.GetLicenceService().GenerateLicence();
+                    _serviceProvider.GetUserService().AssignLicence(user.Id, licenceId);
+                    _serviceProvider.GetLicenceService().SetUsed(licenceId);
+                    user = _serviceProvider.GetUserService().GetUser(email);
+                }
             }
-            licence = _serviceProvider.GetLicenceService().GetLicenceKey(user.LicenceKeyId.Value);
-            result.Licence = new LicenceModel
+            if (user.LicenceKeyId.HasValue)
             {
-                Id = licence.Id,
-                IsUsed = licence.IsUsed,
-                Key = licence.Key
-            };
+                licence = _serviceProvider.GetLicenceService().GetLicenceKey(user.LicenceKeyId.Value);
+                result.Licence = new LicenceModel
+                {
+                    Id = licence.Id,
+                    IsUsed = licence.IsUsed,
+                    Key = licence.Key
+                };
+            }
             TelemetryRecord telemetry = _serviceProvider.GetTelemetryService().GetTelemetryRecordFor(user.Id);
             if(telemetry != null)
             {
