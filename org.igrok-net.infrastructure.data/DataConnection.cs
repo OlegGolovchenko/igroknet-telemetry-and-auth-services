@@ -78,6 +78,12 @@ namespace org.igrok_net.infrastructure.data
                 "netfxver varchar(1024) character set utf8mb4 not null, " +
                 "userId bigint not null, constraint pk_telemetryId primary key(id)" +
                 ");";
+            query += "create table if not exists telemetryIps(" +
+                "id bigint not null auto_increment," +
+                "telemetryId bigint not null," +
+                "ip char(254) character set utf8mb4 not null," +
+                "constraint pk_telemetryIps primary key(id)" +
+                ");";
             var command = new MySqlCommand(query, _connection);
             command.ExecuteNonQuery();
         }
