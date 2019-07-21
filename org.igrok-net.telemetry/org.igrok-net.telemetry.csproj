@@ -1,9 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web" DefaultTargets="Publish">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <RootNamespace>org.igrok_net.telemetry</RootNamespace>
+    <PublishDir>$(OutDir)_PublishedWebsites\NetCoreWebApp\</PublishDir>
   </PropertyGroup>
 
   <ItemGroup>
