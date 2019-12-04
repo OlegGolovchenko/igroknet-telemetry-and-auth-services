@@ -91,14 +91,16 @@ namespace org.igrok_net.telemetry.Controllers
                 var telemetryRecord = _serviceProvider.GetTelemetryService().CreateOrUpdateTelemetryRecord(user.Id, telemetry.OsVersion, telemetry.NetFxVersion);
                 var clientIp = Request.Headers["CF-Connecting-IP"].FirstOrDefault() ?? Request.Headers["X-Forwarded-For"].FirstOrDefault();
                 var resultReader = _dataConnection.ExecuteReader($"SELECT COUNT(*) FROM telemetryIps WHERE telemetryId = {user.Id} AND ip = \"{clientIp}\"");
+                var result = 0;
                 if (resultReader.HasRows)
                 {
                     resultReader.Read();
-                    if (resultReader.GetInt32(0) == 0)
-                    {
-                        _dataConnection.ExecuteNonQuery($"INSERT INTO telemetryIps(telemetryId,ip) VALUES({telemetryRecord},\"{clientIp}\")");
-                    }
+                    result = resultReader.GetInt32(0);
                     resultReader.Close();
+                }
+                if (result == 0)
+                {
+                    _dataConnection.ExecuteNonQuery($"INSERT INTO telemetryIps(telemetryId,ip) VALUES({telemetryRecord},\"{clientIp}\")");
                 }
                 return Ok();
             }
