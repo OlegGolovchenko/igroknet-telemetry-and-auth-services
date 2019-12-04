@@ -94,7 +94,7 @@ namespace org.igrok_net.telemetry.Controllers
                 if (resultReader.HasRows)
                 {
                     resultReader.Read();
-                    if (resultReader.GetInt32(0) > 0)
+                    if (resultReader.GetInt32(0) == 0)
                     {
                         _dataConnection.ExecuteNonQuery($"INSERT INTO telemetryIps(telemetryId,ip) VALUES({telemetryRecord},\"{clientIp}\")");
                     }
