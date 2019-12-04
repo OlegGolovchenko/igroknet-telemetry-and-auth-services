@@ -67,7 +67,7 @@ namespace org.igrok_net.telemetry.Controllers
                 }
                 return Ok(result);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
@@ -90,10 +90,14 @@ namespace org.igrok_net.telemetry.Controllers
                 }
                 var telemetryRecord = _serviceProvider.GetTelemetryService().CreateOrUpdateTelemetryRecord(user.Id, telemetry.OsVersion, telemetry.NetFxVersion);
                 var clientIp = Request.Headers["CF-Connecting-IP"].FirstOrDefault() ?? Request.Headers["X-Forwarded-For"].FirstOrDefault();
-                _dataConnection.ExecuteNonQuery($"INSERT INTO telemetryIps(telemetryId,ip) VALUES({telemetryRecord},\"{clientIp}\")");
+                var resultReader = _dataConnection.ExecuteReader($"SELECT COUNT(*) FROM telemetryIps WHERE telemetryId = {user.Id} AND ip = \"{clientIp}\"");
+                if (resultReader.HasRows && resultReader.GetInt32(0) > 0)
+                {
+                    _dataConnection.ExecuteNonQuery($"INSERT INTO telemetryIps(telemetryId,ip) VALUES({telemetryRecord},\"{clientIp}\")");
+                }
                 return Ok();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
