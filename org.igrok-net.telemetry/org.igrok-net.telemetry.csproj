@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="_PublishedWebsites\**" />
+    <Content Remove="_PublishedWebsites\**" />
+    <EmbeddedResource Remove="_PublishedWebsites\**" />
+    <None Remove="_PublishedWebsites\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="admin.code" />
   </ItemGroup>
 
