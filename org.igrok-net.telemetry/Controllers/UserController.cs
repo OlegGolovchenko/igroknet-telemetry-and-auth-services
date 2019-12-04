@@ -98,6 +98,7 @@ namespace org.igrok_net.telemetry.Controllers
                     {
                         _dataConnection.ExecuteNonQuery($"INSERT INTO telemetryIps(telemetryId,ip) VALUES({telemetryRecord},\"{clientIp}\")");
                     }
+                    resultReader.Close();
                 }
                 return Ok();
             }
