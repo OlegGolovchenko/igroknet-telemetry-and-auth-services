@@ -30,7 +30,6 @@ namespace org.igrok_net.infrastructure.data
             _connection.Open();
             InitialiseDB();
         }
-
         private static string GetConnectionString()
         {
             var data = File.ReadAllText("localdb.json");

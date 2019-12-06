@@ -185,24 +185,7 @@ namespace org.igrok_net.telemetry.Controllers
                 {
                     return Unauthorized("Your admin code is not correct");
                 }
-                var result = new List<UserListModel>();
-                var resultReader = _dataProvider.ExecuteReader("SELECT id, mail FROM users");
-                                    
-                if (resultReader.HasRows)
-                {
-                    resultReader.Read();
-                }
-                while (resultReader.HasRows)
-                {
-                    var usr = new UserListModel
-                    {
-                        Id = resultReader.GetInt64(0),
-                        Email = resultReader.GetString(1)
-                    };
-                    result.Add(usr);
-                    resultReader.Read();
-                }
-                resultReader.Close();
+                var result = _serviceProvider.GetUserService().ListUsers();
                 return Ok(result);
             }
             catch (Exception e)
