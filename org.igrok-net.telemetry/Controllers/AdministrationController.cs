@@ -5,6 +5,7 @@ using org.igrok_net.infrastructure.domain.Interfaces;
 using org.igrok_net.infrastructure.domain.Services;
 using org.igrok_net.telemetry.Models;
 using System;
+using System.Collections.Generic;
 
 namespace org.igrok_net.telemetry.Controllers
 {
@@ -174,5 +175,36 @@ namespace org.igrok_net.telemetry.Controllers
             }
         }
 
+
+        [HttpGet("users")]
+        public IActionResult ListUserMails([FromQuery] string admKey)
+        {
+            try
+            {
+                if (_adminCode.AdminCode != admKey)
+                {
+                    return Unauthorized("Your admin code is not correct");
+                }
+                var result = new List<UserListModel>();
+                using (var resultReader = _dataProvider.ExecuteReader("SELECT id, email FROM users"))
+                {
+                    while (resultReader.HasRows)
+                    {
+                        resultReader.Read();
+                        var usr = new UserListModel
+                        {
+                            Id = resultReader.GetInt64(0),
+                            Email = resultReader.GetString(1)
+                        };
+                        result.Add(usr);
+                    }
+                }
+                return Ok(result);
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }
