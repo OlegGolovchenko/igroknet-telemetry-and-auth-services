@@ -25,7 +25,7 @@ namespace org.igrok_net.telemetry.Controllers
         }
 
         [HttpGet("create")]
-        public IActionResult GetOrCreateUser([FromQuery]string email,[FromQuery]string admKey)
+        public IActionResult GetOrCreateUser([FromQuery]string email, [FromQuery]string admKey)
         {
             try
             {
@@ -118,7 +118,7 @@ namespace org.igrok_net.telemetry.Controllers
                 }
                 return Ok(result);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
@@ -141,7 +141,7 @@ namespace org.igrok_net.telemetry.Controllers
                 _serviceProvider.GetUserService().ResignLicence(user.Id);
                 return Ok();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
@@ -169,7 +169,7 @@ namespace org.igrok_net.telemetry.Controllers
                     return BadRequest("No unassigned licence was found.");
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
@@ -186,26 +186,26 @@ namespace org.igrok_net.telemetry.Controllers
                     return Unauthorized("Your admin code is not correct");
                 }
                 var result = new List<UserListModel>();
-                using (var resultReader = _dataProvider.ExecuteReader("SELECT id, mail FROM users"))
+                var resultReader = _dataProvider.ExecuteReader("SELECT id, mail FROM users");
+                                    
+                if (resultReader.HasRows)
                 {
-                    if (resultReader.HasRows)
-                    {
-                        resultReader.Read();
-                    }
-                    while (resultReader.HasRows)
-                    {                        
-                        var usr = new UserListModel
-                        {
-                            Id = resultReader.GetInt64(0),
-                            Email = resultReader.GetString(1)
-                        };
-                        result.Add(usr);
-                        resultReader.Read();
-                    }
+                    resultReader.Read();
                 }
+                while (resultReader.HasRows)
+                {
+                    var usr = new UserListModel
+                    {
+                        Id = resultReader.GetInt64(0),
+                        Email = resultReader.GetString(1)
+                    };
+                    result.Add(usr);
+                    resultReader.Read();
+                }
+                resultReader.Close();
                 return Ok(result);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
