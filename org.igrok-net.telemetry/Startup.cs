@@ -21,14 +21,22 @@ namespace org.igrok_net.telemetry
         {
             var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING");
             var adminAccessCode = Environment.GetEnvironmentVariable("ADMIN_CODE");
+            var msSqlConnectionString = Environment.GetEnvironmentVariable("SQLSERVER_CONNECTION_STRING");
             IDataAccess dataConn;
-            if (string.IsNullOrWhiteSpace(connectionString))
+            if (string.IsNullOrWhiteSpace(connectionString) && string.IsNullOrWhiteSpace(msSqlConnectionString))
             {
                 dataConn = new DataConnection();
             }
             else
             {
-                dataConn = new DataConnection(connectionString);
+                if (string.IsNullOrWhiteSpace(msSqlConnectionString))
+                {
+                    dataConn = new DataConnection(connectionString, true);
+                }
+                else
+                {
+                    dataConn = new DataConnection(msSqlConnectionString, false);
+                }
             }
             var repo = new org.igrok_net.infrastructure.domain.Services.ServiceProvider(dataConn);
             services.AddSingleton<IDataAccess>(dataConn);

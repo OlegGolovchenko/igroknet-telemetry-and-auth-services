@@ -4,6 +4,7 @@ using System;
 using System.Data.Common;
 using System.IO;
 using Newtonsoft.Json;
+using System.Data.SqlClient;
 
 namespace org.igrok_net.infrastructure.data
 {
@@ -19,8 +20,10 @@ namespace org.igrok_net.infrastructure.data
     public class DataConnection : IDataAccess, IDisposable
     {
         private MySqlConnection _connection;
+        private SqlConnection _sqlServerConnection;
+        private bool _mySqlMode = false;
 
-        public DataConnection():this(GetConnectionString())
+        public DataConnection() : this(GetConnectionString())
         {
         }
 
@@ -30,6 +33,26 @@ namespace org.igrok_net.infrastructure.data
             _connection.Open();
             InitialiseDB();
         }
+
+
+        public DataConnection(string connectionString, bool mySqlMode)
+        {
+
+            _mySqlMode = mySqlMode;
+            if (mySqlMode)
+            {
+                _connection = new MySqlConnection(connectionString);
+                _connection.Open();
+                InitialiseDB();
+            }
+            else
+            {
+                _sqlServerConnection = new SqlConnection(connectionString);
+                _connection.Open();
+                InitialiseDB();
+            }
+        }
+
         private static string GetConnectionString()
         {
             var data = File.ReadAllText("localdb.json");
@@ -39,7 +62,7 @@ namespace org.igrok_net.infrastructure.data
 
         public void Dispose()
         {
-            if(_connection != null)
+            if (_connection != null)
             {
                 _connection.Close();
             }
@@ -47,17 +70,79 @@ namespace org.igrok_net.infrastructure.data
 
         public void ExecuteNonQuery(string query)
         {
-            var command = new MySqlCommand(query, _connection);
-            command.ExecuteNonQuery();
+            if (_mySqlMode)
+            {
+                var command = new MySqlCommand(query, _connection);
+                command.ExecuteNonQuery();
+            }
+            else
+            {
+                var command = new SqlCommand(query, _sqlServerConnection);
+                command.ExecuteNonQuery();
+            }
         }
 
         public DbDataReader ExecuteReader(string query)
         {
-            var command = new MySqlCommand(query, _connection);
-            return command.ExecuteReader();
+            if (_mySqlMode)
+            {
+                var command = new MySqlCommand(query, _connection);
+                return command.ExecuteReader();
+            }
+            else
+            {
+                var command = new SqlCommand(query, _sqlServerConnection);
+                return command.ExecuteReader();
+            }
         }
 
         public void InitialiseDB()
+        {
+            if (_mySqlMode)
+            {
+                InitialiseMysqlDB();
+            }
+            else
+            {
+                InitialiseMsSqlDB();
+            }
+        }
+
+        private void InitialiseMsSqlDB()
+        {
+            var query = "if not exists(select * from sysobjects where name='licences' and xtype='U')" +
+                "create table licences(" +
+                "id bigint not null auto_increment, " +
+                "licenceKey char(29) not null, " +
+                "isUsed bit not null default false, " +
+                "constraint pk_licenceId primary key(id)" +
+                ");";
+            query += "if not exists(select * from sysobjects where name='users' and xtype='U')" +
+                "create table users(" +
+                "id bigint not null auto_increment, " +
+                "mail char(254) not null, " +
+                "licence bigint null, constraint pk_userId primary key(id)," +
+                "constraint fk_users_licence foreign key(licence) references licences(id)" +
+                ");";
+            query += "if not exists(select * from sysobjects where name='telemetries' and xtype='U')" +
+                "create table telemetries(" +
+                "id bigint not null auto_increment, " +
+                "osver varchar(1024) character set utf8mb4 not null, " +
+                "netfxver varchar(1024) character set utf8mb4 not null, " +
+                "userId bigint not null, constraint pk_telemetryId primary key(id)" +
+                ");";
+            query += "if not exists(select * from sysobjects where name='telemetryIps' and xtype='U')" +
+                "create table telemetryIps(" +
+                "id bigint not null auto_increment," +
+                "telemetryId bigint not null," +
+                "ip char(254) character set utf8mb4 not null," +
+                "constraint pk_telemetryIps primary key(id)" +
+                ");";
+            var command = new SqlCommand(query, _sqlServerConnection);
+            command.ExecuteNonQuery();
+        }
+
+        public void InitialiseMysqlDB()
         {
             var query = "create table if not exists licences(" +
                 "id bigint not null auto_increment, " +
