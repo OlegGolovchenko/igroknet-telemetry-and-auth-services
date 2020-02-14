@@ -48,7 +48,7 @@ namespace org.igrok_net.infrastructure.data
             else
             {
                 _sqlServerConnection = new SqlConnection(connectionString);
-                _connection.Open();
+                _sqlServerConnection.Open();
                 InitialiseDB();
             }
         }
@@ -65,6 +65,10 @@ namespace org.igrok_net.infrastructure.data
             if (_connection != null)
             {
                 _connection.Close();
+            }
+            if(_sqlServerConnection != null)
+            {
+                _sqlServerConnection.Close();
             }
         }
 
@@ -112,30 +116,30 @@ namespace org.igrok_net.infrastructure.data
         {
             var query = "if not exists(select * from sysobjects where name='licences' and xtype='U')" +
                 "create table licences(" +
-                "id bigint not null auto_increment, " +
+                "id bigint not null Identity(1,1), " +
                 "licenceKey char(29) not null, " +
-                "isUsed bit not null default false, " +
+                "isUsed bit not null default 'false', " +
                 "constraint pk_licenceId primary key(id)" +
                 ");";
             query += "if not exists(select * from sysobjects where name='users' and xtype='U')" +
                 "create table users(" +
-                "id bigint not null auto_increment, " +
+                "id bigint not null Identity(1,1), " +
                 "mail char(254) not null, " +
                 "licence bigint null, constraint pk_userId primary key(id)," +
                 "constraint fk_users_licence foreign key(licence) references licences(id)" +
                 ");";
             query += "if not exists(select * from sysobjects where name='telemetries' and xtype='U')" +
                 "create table telemetries(" +
-                "id bigint not null auto_increment, " +
-                "osver varchar(1024) character set utf8mb4 not null, " +
-                "netfxver varchar(1024) character set utf8mb4 not null, " +
+                "id bigint not null Identity(1,1), " +
+                "osver varchar(1024) not null, " +
+                "netfxver varchar(1024) not null, " +
                 "userId bigint not null, constraint pk_telemetryId primary key(id)" +
                 ");";
             query += "if not exists(select * from sysobjects where name='telemetryIps' and xtype='U')" +
                 "create table telemetryIps(" +
-                "id bigint not null auto_increment," +
+                "id bigint not null Identity(1,1)," +
                 "telemetryId bigint not null," +
-                "ip char(254) character set utf8mb4 not null," +
+                "ip char(254) not null," +
                 "constraint pk_telemetryIps primary key(id)" +
                 ");";
             var command = new SqlCommand(query, _sqlServerConnection);
