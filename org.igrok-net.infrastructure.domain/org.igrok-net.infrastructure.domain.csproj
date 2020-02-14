@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>org.igrok_net.infrastructure.domain</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="org.igrok.validator" Version="1.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="IGNKeyGen">
+      <HintPath>Lib\IGNKeyGen.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

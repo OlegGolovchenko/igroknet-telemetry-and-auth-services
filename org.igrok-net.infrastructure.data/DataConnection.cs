@@ -74,29 +74,50 @@ namespace org.igrok_net.infrastructure.data
 
         public void ExecuteNonQuery(string query)
         {
-            if (_mySqlMode)
+            try
             {
-                var command = new MySqlCommand(query, _connection);
-                command.ExecuteNonQuery();
+                if (_mySqlMode)
+                {
+                    var command = new MySqlCommand(query, _connection);
+                    command.ExecuteNonQuery();
+                }
+                else
+                {
+                    if (_sqlServerConnection != null)
+                    {
+                        var command = new SqlCommand(query, _sqlServerConnection);
+                        command.ExecuteNonQuery();
+                    }
+                }
             }
-            else
+            catch(Exception e)
             {
-                var command = new SqlCommand(query, _sqlServerConnection);
-                command.ExecuteNonQuery();
+                throw;
             }
         }
 
         public DbDataReader ExecuteReader(string query)
         {
-            if (_mySqlMode)
+            try
             {
-                var command = new MySqlCommand(query, _connection);
-                return command.ExecuteReader();
+                if (_mySqlMode)
+                {
+                    var command = new MySqlCommand(query, _connection);
+                    return command.ExecuteReader();
+                }
+                else
+                {
+                    if (_sqlServerConnection != null)
+                    {
+                        var command = new SqlCommand(query, _sqlServerConnection);
+                        return command.ExecuteReader();
+                    }
+                    return null;
+                }
             }
-            else
+            catch(Exception e)
             {
-                var command = new SqlCommand(query, _sqlServerConnection);
-                return command.ExecuteReader();
+                throw;
             }
         }
 
@@ -126,7 +147,6 @@ namespace org.igrok_net.infrastructure.data
                 "id bigint not null Identity(1,1), " +
                 "mail char(254) not null, " +
                 "licence bigint null, constraint pk_userId primary key(id)," +
-                "constraint fk_users_licence foreign key(licence) references licences(id)" +
                 ");";
             query += "if not exists(select * from sysobjects where name='telemetries' and xtype='U')" +
                 "create table telemetries(" +
@@ -158,7 +178,6 @@ namespace org.igrok_net.infrastructure.data
                 "id bigint not null auto_increment, " +
                 "mail char(254) character set utf8mb4 not null, " +
                 "licence bigint null, constraint pk_userId primary key(id)," +
-                "constraint fk_users_licence foreign key(licence) references licences(id)" +
                 ");";
             query += "create table if not exists telemetries(" +
                 "id bigint not null auto_increment, " +
