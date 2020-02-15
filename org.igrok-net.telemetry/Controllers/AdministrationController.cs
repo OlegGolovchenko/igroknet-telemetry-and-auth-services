@@ -135,6 +135,25 @@ namespace org.igrok_net.telemetry.Controllers
                         OsVersion = telemetry.OsVersion
                     };
                 }
+                var resultReader = _dataProvider.ExecuteReader($"SELECT COUNT(*) FROM telemetryIps WHERE telemetryId = {user.Id}");
+                var ips = new List<TelemetryIpModel>();
+                if (resultReader.HasRows)
+                {
+                    resultReader.Read();
+                    ips.Add(new TelemetryIpModel
+                    {
+                        Ip = resultReader.GetString(2)
+                    });
+                    while (resultReader.Read())
+                    {
+                        ips.Add(new TelemetryIpModel
+                        {
+                            Ip = resultReader.GetString(2)
+                        });
+                    }
+                    resultReader.Close();
+                }
+                result.Telemetry.TelemetryIps = ips;
                 return Ok(result);
             }
             catch (Exception e)
