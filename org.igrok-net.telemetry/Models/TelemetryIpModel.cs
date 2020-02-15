@@ -7,6 +7,6 @@ namespace org.igrok_net.telemetry.Models
 {
     public class TelemetryIpModel
     {
-        public int Ip { get; set; }
+        public string Ip { get; set; }
     }
 }

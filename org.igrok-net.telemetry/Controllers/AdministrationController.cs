@@ -77,13 +77,13 @@ namespace org.igrok_net.telemetry.Controllers
                     resultReader.Read();
                     ips.Add(new TelemetryIpModel
                     {
-                        Ip = resultReader.GetInt32(0)
+                        Ip = resultReader.GetString(2)
                     });
                     while (resultReader.Read())
                     {
                         ips.Add(new TelemetryIpModel
                         {
-                            Ip = resultReader.GetInt32(0)
+                            Ip = resultReader.GetString(2)
                         });
                     }
                     resultReader.Close();
