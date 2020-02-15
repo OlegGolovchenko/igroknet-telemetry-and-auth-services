@@ -70,7 +70,7 @@ namespace org.igrok_net.telemetry.Controllers
                         OsVersion = telemetry.OsVersion
                     };
                 }
-                var resultReader = _dataProvider.ExecuteReader($"SELECT COUNT(*) FROM telemetryIps WHERE telemetryId = {user.Id}");
+                var resultReader = _dataProvider.ExecuteReader($"SELECT * FROM telemetryIps WHERE telemetryId = {user.Id}");
                 var ips = new List<TelemetryIpModel>();
                 if (resultReader.HasRows)
                 {
@@ -135,7 +135,7 @@ namespace org.igrok_net.telemetry.Controllers
                         OsVersion = telemetry.OsVersion
                     };
                 }
-                var resultReader = _dataProvider.ExecuteReader($"SELECT COUNT(*) FROM telemetryIps WHERE telemetryId = {user.Id}");
+                var resultReader = _dataProvider.ExecuteReader($"SELECT * FROM telemetryIps WHERE telemetryId = {user.Id}");
                 var ips = new List<TelemetryIpModel>();
                 if (resultReader.HasRows)
                 {
